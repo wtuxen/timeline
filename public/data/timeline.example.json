@@ -6,19 +6,19 @@
     "updatedAt": "2026-01-01T00:00:00.000Z"
   },
   "statuses": [
-    { "id": "st-a-iniciar", "name": "A iniciar", "color": "#94a3b8", "done": false },
-    { "id": "st-em-andamento", "name": "Em andamento", "color": "#0ea5e9", "done": false },
-    { "id": "st-concluido", "name": "Concluído", "color": "#22c55e", "done": true },
-    { "id": "st-cancelado", "name": "Cancelado", "color": "#f43f5e", "done": true },
-    { "id": "st-objetivo", "name": "Objetivo", "color": "#a855f7", "done": false }
+    { "id": "st-a-iniciar", "name": "A iniciar", "color": "#9ca0b0", "done": false },
+    { "id": "st-em-andamento", "name": "Em andamento", "color": "#04a5e5", "done": false },
+    { "id": "st-concluido", "name": "Concluído", "color": "#40a02b", "done": true },
+    { "id": "st-cancelado", "name": "Cancelado", "color": "#d20f39", "done": true },
+    { "id": "st-objetivo", "name": "Objetivo", "color": "#8839ef", "done": false }
   ],
   "categories": [
-    { "id": "cat-carreira", "name": "Carreira", "color": "#6366f1" },
-    { "id": "cat-financas", "name": "Finanças", "color": "#10b981" },
-    { "id": "cat-saude", "name": "Saúde", "color": "#ef4444" },
-    { "id": "cat-estudos", "name": "Estudos", "color": "#f59e0b" },
-    { "id": "cat-pessoal", "name": "Pessoal", "color": "#ec4899" },
-    { "id": "cat-viagens", "name": "Viagens", "color": "#14b8a6" }
+    { "id": "cat-carreira", "name": "Carreira", "color": "#7287fd" },
+    { "id": "cat-financas", "name": "Finanças", "color": "#179299" },
+    { "id": "cat-saude", "name": "Saúde", "color": "#e64553" },
+    { "id": "cat-estudos", "name": "Estudos", "color": "#df8e1d" },
+    { "id": "cat-pessoal", "name": "Pessoal", "color": "#ea76cb" },
+    { "id": "cat-viagens", "name": "Viagens", "color": "#209fb5" }
   ],
   "tasks": [
     {

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import type { CSSProperties } from 'react'
 import type { CategoryDef, ID, ISODate, Milestone, Task, ZoomLevel } from '../../types'
 import { useDatabase } from '../../state/database'
 import { buildScale } from './scale'
@@ -76,7 +77,7 @@ export function TimelineView({
         {
           key: 'all',
           label: 'Todos os itens',
-          color: '#64748b',
+          color: '#8c8fa1',
           tasks: [...tasks].sort(byStart),
           milestones: [...milestones].sort((a, b) => a.date.localeCompare(b.date)),
         },
@@ -90,7 +91,7 @@ export function TimelineView({
         buckets.set(key, {
           key,
           label: category?.name ?? 'Sem categoria',
-          color: category?.color ?? '#94a3b8',
+          color: category?.color ?? '#9ca0b0',
           tasks: [],
           milestones: [],
         })
@@ -298,7 +299,10 @@ export function TimelineView({
                     style={{ width: LEFT_WIDTH }}
                   >
                     <span className="size-2 rounded-full" style={{ backgroundColor: group.color }} />
-                    <span className="truncate text-xs font-semibold tracking-wide uppercase" style={{ color: group.color }}>
+                    <span
+                      className="tinted-text truncate text-xs font-semibold tracking-wide uppercase"
+                      style={{ '--tint-color': group.color } as CSSProperties}
+                    >
                       {group.label}
                     </span>
                     <span className="ml-auto text-[11px] text-slate-400">
@@ -342,7 +346,7 @@ export function TimelineView({
     const preview = isDragging && drag ? applyDrag(drag) : { start: task.start, end: task.end }
     const status = statusById.get(task.statusId)
     const category = task.categoryId ? categoryById.get(task.categoryId) : null
-    const color = status?.color ?? '#64748b'
+    const color = status?.color ?? '#8c8fa1'
     const x = scale.xOf(preview.start)
     const width = scale.widthOf(preview.start, preview.end)
     const days = durationInDays(preview.start, preview.end)
@@ -434,7 +438,7 @@ export function TimelineView({
   function renderMilestoneRow(milestone: Milestone, top: number) {
     const status = statusById.get(milestone.statusId)
     const category = milestone.categoryId ? categoryById.get(milestone.categoryId) : null
-    const color = status?.color ?? '#a855f7'
+    const color = status?.color ?? '#8839ef'
     const x = scale.xOf(milestone.date) + Math.min(scale.pxPerDay, 40) / 2
 
     return (

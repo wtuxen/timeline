@@ -10,7 +10,7 @@ export type ISODate = string
 export interface StatusDef {
   id: ID
   name: string
-  /** Cor base em hex (`#0ea5e9`). */
+  /** Cor base em hex (`#04a5e5`). */
   color: string
   /** Status "terminais" não entram no cálculo de trabalho em aberto. */
   done?: boolean

@@ -88,7 +88,7 @@ export function normalize(input: unknown): Database {
     .map((s, index) => ({
       id: str(s.id) || `st-${index}`,
       name: str(s.name) || `Status ${index + 1}`,
-      color: color(s.color, '#94a3b8'),
+      color: color(s.color, '#9ca0b0'),
       done: Boolean(s.done),
     }))
     .filter(uniqueById())
@@ -97,7 +97,7 @@ export function normalize(input: unknown): Database {
     .map((c, index) => ({
       id: str(c.id) || `cat-${index}`,
       name: str(c.name) || `Categoria ${index + 1}`,
-      color: color(c.color, '#6366f1'),
+      color: color(c.color, '#7287fd'),
     }))
     .filter(uniqueById())
 

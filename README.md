@@ -89,6 +89,13 @@ categoria"), recorte de período e alternância entre tarefas e marcos. Sem sele
 tudo. As preferências de visualização (aba, zoom, agrupamento, tema claro/escuro) ficam salvas
 entre sessões.
 
+### Tema
+
+A interface usa a paleta [Catppuccin](https://catppuccin.com): **Latte** no modo claro e
+**Mocha** no escuro. Os tons ficam em variáveis CSS (`--ctp-*`) no topo de `src/index.css` e
+as escalas de cor do Tailwind apontam para elas, então trocar de flavor (Frappé, Macchiato…)
+é só substituir os valores dessas variáveis.
+
 ---
 
 ## Formato dos dados
@@ -97,8 +104,8 @@ entre sessões.
 {
   "version": 1,
   "meta": { "title": "Minha timeline", "owner": "", "updatedAt": "..." },
-  "statuses":   [{ "id": "st-x", "name": "Em andamento", "color": "#0ea5e9", "done": false }],
-  "categories": [{ "id": "cat-x", "name": "Carreira", "color": "#6366f1" }],
+  "statuses":   [{ "id": "st-x", "name": "Em andamento", "color": "#04a5e5", "done": false }],
+  "categories": [{ "id": "cat-x", "name": "Carreira", "color": "#7287fd" }],
   "tasks":      [{ "id": "task-x", "title": "…", "description": "…",
                    "start": "2026-01-05", "end": "2026-01-31",
                    "statusId": "st-x", "categoryId": "cat-x", "progress": 40 }],
