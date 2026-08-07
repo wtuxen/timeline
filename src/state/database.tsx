@@ -188,7 +188,7 @@ export function DatabaseProvider({ children }: { children: ReactNode }) {
         const next: StatusDef = {
           id,
           name: draft.name ?? existing?.name ?? 'Novo status',
-          color: draft.color ?? existing?.color ?? '#94a3b8',
+          color: draft.color ?? existing?.color ?? '#9ca0b0',
           done: draft.done !== undefined ? draft.done : (existing?.done ?? false),
         }
         return {
@@ -235,7 +235,7 @@ export function DatabaseProvider({ children }: { children: ReactNode }) {
         const next: CategoryDef = {
           id,
           name: draft.name ?? existing?.name ?? 'Nova categoria',
-          color: draft.color ?? existing?.color ?? '#6366f1',
+          color: draft.color ?? existing?.color ?? '#7287fd',
         }
         return {
           ...current,

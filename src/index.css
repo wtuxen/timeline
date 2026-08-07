@@ -3,22 +3,209 @@
 /* Tema controlado por classe no <html> (claro/escuro/sistema). */
 @custom-variant dark (&:where(.dark, .dark *));
 
-@theme {
+/*
+  Paleta Catppuccin: Latte no modo claro, Mocha no escuro.
+  As variáveis `--ctp-*` trocam de valor junto com o tema e as escalas do
+  Tailwind apontam para elas em `@theme inline`, então as classes já usadas nos
+  componentes (slate, sky, rose…) rendem Catppuccin nos dois modos.
+*/
+:root {
+  /* Catppuccin Latte — acentos */
+  --ctp-rosewater: #dc8a78;
+  --ctp-flamingo: #dd7878;
+  --ctp-pink: #ea76cb;
+  --ctp-mauve: #8839ef;
+  --ctp-red: #d20f39;
+  --ctp-maroon: #e64553;
+  --ctp-peach: #fe640b;
+  --ctp-yellow: #df8e1d;
+  --ctp-green: #40a02b;
+  --ctp-teal: #179299;
+  --ctp-sky: #04a5e5;
+  --ctp-sapphire: #209fb5;
+  --ctp-blue: #1e66f5;
+  --ctp-lavender: #7287fd;
+
+  /* Catppuccin Latte — superfícies e texto */
+  --ctp-text: #4c4f69;
+  --ctp-subtext1: #5c5f77;
+  --ctp-subtext0: #6c6f85;
+  --ctp-overlay2: #7c7f93;
+  --ctp-overlay1: #8c8fa1;
+  --ctp-overlay0: #9ca0b0;
+  --ctp-surface2: #acb0be;
+  --ctp-surface1: #bcc0cc;
+  --ctp-surface0: #ccd0da;
+  --ctp-base: #eff1f5;
+  --ctp-mantle: #e6e9ef;
+  --ctp-crust: #dce0e8;
+
+  /*
+    Rampa neutra (escala `slate` do Tailwind). Mantém o sentido de sempre —
+    50 é a superfície mais clara e 950 o texto mais forte — só que preenchida
+    com os tons do Latte.
+  */
+  --ctp-n-50: #eaedf3;
+  --ctp-n-100: #e6e9ef;
+  --ctp-n-200: #dce0e8;
+  --ctp-n-300: #ccd0da;
+  --ctp-n-400: #9ca0b0;
+  --ctp-n-500: #6c6f85;
+  --ctp-n-600: #5c5f77;
+  --ctp-n-700: #4c4f69;
+  --ctp-n-800: #4c4f69;
+  --ctp-n-900: #4c4f69;
+  --ctp-n-950: #4c4f69;
+
+  /* Superfície dos cartões (escala `white`) e sombra (escala `black`). */
+  --ctp-white: #eff1f5;
+  --ctp-black: #11111b;
+
+  /* Acento de interface: azul do Latte, com hover/active derivados. */
+  --ctp-accent-soft: #7287fd;
+  --ctp-accent-hover: #3c7cf7;
+  --ctp-accent: #1e66f5;
+  --ctp-accent-active: #114ec9;
+  /* Texto sobre o acento preenchido (botão primário). */
+  --ctp-on-accent: #eff1f5;
+
+  /* Escala de erro/perigo (escala `rose`), derivada de red/maroon. */
+  --ctp-danger-50: #fbe6ea;
+  --ctp-danger-200: #f3c7ce;
+  --ctp-danger-300: #eaa8b3;
+  --ctp-danger-400: #e64553;
+  --ctp-danger-500: #d20f39;
+  --ctp-danger-600: #d20f39;
+  --ctp-danger-700: #b00c30;
+  --ctp-danger-900: #8a0a26;
+  --ctp-danger-950: #5e0619;
+
+  /* Sucesso (escala `emerald`) e destaque (escala `amber`). */
+  --ctp-success: #40a02b;
+  --ctp-highlight: #df8e1d;
+
+  color-scheme: light;
+}
+
+html.dark {
+  /* Catppuccin Mocha — acentos */
+  --ctp-rosewater: #f5e0dc;
+  --ctp-flamingo: #f2cdcd;
+  --ctp-pink: #f5c2e7;
+  --ctp-mauve: #cba6f7;
+  --ctp-red: #f38ba8;
+  --ctp-maroon: #eba0ac;
+  --ctp-peach: #fab387;
+  --ctp-yellow: #f9e2af;
+  --ctp-green: #a6e3a1;
+  --ctp-teal: #94e2d5;
+  --ctp-sky: #89dceb;
+  --ctp-sapphire: #74c7ec;
+  --ctp-blue: #89b4fa;
+  --ctp-lavender: #b4befe;
+
+  /* Catppuccin Mocha — superfícies e texto */
+  --ctp-text: #cdd6f4;
+  --ctp-subtext1: #bac2de;
+  --ctp-subtext0: #a6adc8;
+  --ctp-overlay2: #9399b2;
+  --ctp-overlay1: #7f849c;
+  --ctp-overlay0: #6c7086;
+  --ctp-surface2: #585b70;
+  --ctp-surface1: #45475a;
+  --ctp-surface0: #313244;
+  --ctp-base: #1e1e2e;
+  --ctp-mantle: #181825;
+  --ctp-crust: #11111b;
+
+  /* Mesma rampa, agora com os tons do Mocha. */
+  --ctp-n-50: #cdd6f4;
+  --ctp-n-100: #cdd6f4;
+  --ctp-n-200: #bac2de;
+  --ctp-n-300: #a6adc8;
+  --ctp-n-400: #9399b2;
+  --ctp-n-500: #7f849c;
+  --ctp-n-600: #6c7086;
+  --ctp-n-700: #45475a;
+  --ctp-n-800: #313244;
+  --ctp-n-900: #1e1e2e;
+  --ctp-n-950: #181825;
+
+  /* No escuro `white` só aparece em texto/realce, então vira o texto do Mocha. */
+  --ctp-white: #cdd6f4;
+  --ctp-black: #11111b;
+
+  --ctp-accent-soft: #89b4fa;
+  --ctp-accent-hover: #a6c8fb;
+  --ctp-accent: #89b4fa;
+  --ctp-accent-active: #74a5f7;
+  /* Azul do Mocha é claro: o texto sobre ele precisa ser escuro. */
+  --ctp-on-accent: #11111b;
+
+  --ctp-danger-50: #f5c2ce;
+  --ctp-danger-200: #f5c2ce;
+  --ctp-danger-300: #eba0ac;
+  --ctp-danger-400: #f38ba8;
+  --ctp-danger-500: #f38ba8;
+  --ctp-danger-600: #f38ba8;
+  --ctp-danger-700: #e06a8c;
+  --ctp-danger-900: #5b3a49;
+  --ctp-danger-950: #2b1e2a;
+
+  --ctp-success: #a6e3a1;
+  --ctp-highlight: #f9e2af;
+
+  color-scheme: dark;
+}
+
+@theme inline {
   --font-sans:
     'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
     sans-serif;
+
+  --color-white: var(--ctp-white);
+  --color-black: var(--ctp-black);
+
+  --color-slate-50: var(--ctp-n-50);
+  --color-slate-100: var(--ctp-n-100);
+  --color-slate-200: var(--ctp-n-200);
+  --color-slate-300: var(--ctp-n-300);
+  --color-slate-400: var(--ctp-n-400);
+  --color-slate-500: var(--ctp-n-500);
+  --color-slate-600: var(--ctp-n-600);
+  --color-slate-700: var(--ctp-n-700);
+  --color-slate-800: var(--ctp-n-800);
+  --color-slate-900: var(--ctp-n-900);
+  --color-slate-950: var(--ctp-n-950);
+
+  --color-sky-300: var(--ctp-accent-soft);
+  --color-sky-400: var(--ctp-accent-soft);
+  --color-sky-500: var(--ctp-accent-hover);
+  --color-sky-600: var(--ctp-accent);
+  --color-sky-700: var(--ctp-accent-active);
+
+  --color-rose-50: var(--ctp-danger-50);
+  --color-rose-100: var(--ctp-danger-200);
+  --color-rose-200: var(--ctp-danger-200);
+  --color-rose-300: var(--ctp-danger-300);
+  --color-rose-400: var(--ctp-danger-400);
+  --color-rose-500: var(--ctp-danger-500);
+  --color-rose-600: var(--ctp-danger-600);
+  --color-rose-700: var(--ctp-danger-700);
+  --color-rose-800: var(--ctp-danger-900);
+  --color-rose-900: var(--ctp-danger-900);
+  --color-rose-950: var(--ctp-danger-950);
+
+  --color-emerald-400: var(--ctp-success);
+  --color-emerald-500: var(--ctp-success);
+  --color-emerald-600: var(--ctp-success);
+
+  --color-amber-400: var(--ctp-highlight);
+  --color-amber-500: var(--ctp-highlight);
+  --color-amber-600: var(--ctp-highlight);
 }
 
 @layer base {
-  :root {
-    color-scheme: light;
-  }
-
-  :root:has(.dark),
-  html.dark {
-    color-scheme: dark;
-  }
-
   html,
   body,
   #root {
@@ -29,10 +216,15 @@
     @apply bg-slate-100 text-slate-900 antialiased dark:bg-slate-950 dark:text-slate-100;
   }
 
+  ::selection {
+    background-color: color-mix(in oklab, var(--ctp-accent) 28%, transparent);
+    color: var(--ctp-text);
+  }
+
   /* Scrollbar discreta para as áreas roláveis da timeline. */
   * {
     scrollbar-width: thin;
-    scrollbar-color: rgb(148 163 184 / 0.5) transparent;
+    scrollbar-color: color-mix(in oklab, var(--ctp-overlay0) 60%, transparent) transparent;
   }
 }
 
@@ -54,8 +246,19 @@
     @apply inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition select-none disabled:cursor-not-allowed disabled:opacity-50;
   }
 
+  /* O acento do Mocha é claro, então o texto do botão primário acompanha o
+     tema em vez de ser sempre branco. */
   .btn-primary {
-    @apply bg-sky-600 text-white hover:bg-sky-500 active:bg-sky-700;
+    background-color: var(--ctp-accent);
+    color: var(--ctp-on-accent);
+  }
+
+  .btn-primary:hover:not(:disabled) {
+    background-color: var(--ctp-accent-hover);
+  }
+
+  .btn-primary:active:not(:disabled) {
+    background-color: var(--ctp-accent-active);
   }
 
   .btn-ghost {
@@ -68,5 +271,19 @@
 
   .card {
     @apply rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900;
+  }
+
+  /*
+    Cores de status/categoria vêm do banco (quem escolhe é o usuário) e valem
+    para os dois temas. Misturar com o texto do tema mantém o tom reconhecível
+    e legível tanto sobre o Latte quanto sobre o Mocha. Quem usa define
+    `--tint-color` no próprio elemento.
+  */
+  .tinted-text {
+    color: color-mix(in oklab, var(--tint-color) 78%, var(--ctp-text));
+  }
+
+  .tinted-surface {
+    background-color: color-mix(in oklab, var(--tint-color) 18%, transparent);
   }
 }

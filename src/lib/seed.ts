@@ -8,21 +8,21 @@ export const DB_VERSION = 1
  * o usuário edita, cria e remove tudo isso na aba Ajustes.
  */
 export const DEFAULT_STATUSES = [
-  { id: 'st-a-iniciar', name: 'A iniciar', color: '#94a3b8' },
-  { id: 'st-em-andamento', name: 'Em andamento', color: '#0ea5e9' },
-  { id: 'st-concluido', name: 'Concluído', color: '#22c55e', done: true },
-  { id: 'st-cancelado', name: 'Cancelado', color: '#f43f5e', done: true },
-  { id: 'st-objetivo', name: 'Objetivo', color: '#a855f7' },
+  { id: 'st-a-iniciar', name: 'A iniciar', color: '#9ca0b0' },
+  { id: 'st-em-andamento', name: 'Em andamento', color: '#04a5e5' },
+  { id: 'st-concluido', name: 'Concluído', color: '#40a02b', done: true },
+  { id: 'st-cancelado', name: 'Cancelado', color: '#d20f39', done: true },
+  { id: 'st-objetivo', name: 'Objetivo', color: '#8839ef' },
 ]
 
 /** Ponto de partida sugerido — troque pelas suas próprias categorias. */
 export const DEFAULT_CATEGORIES = [
-  { id: 'cat-carreira', name: 'Carreira', color: '#6366f1' },
-  { id: 'cat-financas', name: 'Finanças', color: '#10b981' },
-  { id: 'cat-saude', name: 'Saúde', color: '#ef4444' },
-  { id: 'cat-estudos', name: 'Estudos', color: '#f59e0b' },
-  { id: 'cat-pessoal', name: 'Pessoal', color: '#ec4899' },
-  { id: 'cat-viagens', name: 'Viagens', color: '#14b8a6' },
+  { id: 'cat-carreira', name: 'Carreira', color: '#7287fd' },
+  { id: 'cat-financas', name: 'Finanças', color: '#179299' },
+  { id: 'cat-saude', name: 'Saúde', color: '#e64553' },
+  { id: 'cat-estudos', name: 'Estudos', color: '#df8e1d' },
+  { id: 'cat-pessoal', name: 'Pessoal', color: '#ea76cb' },
+  { id: 'cat-viagens', name: 'Viagens', color: '#209fb5' },
 ]
 
 /**

@@ -195,7 +195,7 @@ export function TableView({ tasks, milestones, onOpen }: TableViewProps) {
                           className="h-full rounded-full"
                           style={{
                             width: `${row.progress}%`,
-                            backgroundColor: status?.color ?? '#0ea5e9',
+                            backgroundColor: status?.color ?? '#04a5e5',
                           }}
                         />
                       </div>
