@@ -1,0 +1,18 @@
+node_modules
+dist
+dist-ssr
+*.local
+.DS_Store
+.vscode/*
+!.vscode/extensions.json
+*.log
+
+# ---------------------------------------------------------------------------
+# SUA BASE PESSOAL NUNCA VAI PARA O GIT.
+# O app carrega `public/data/timeline.json` quando o arquivo existe, mas ele
+# fica fora do versionamento — o repositório publica só o código.
+# Use `public/data/timeline.example.json` como referência do formato.
+# ---------------------------------------------------------------------------
+public/data/timeline.json
+timeline-*.json
+*.backup.json

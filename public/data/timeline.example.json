@@ -1,0 +1,133 @@
+{
+  "version": 1,
+  "meta": {
+    "title": "Minha timeline",
+    "owner": "",
+    "updatedAt": "2026-01-01T00:00:00.000Z"
+  },
+  "statuses": [
+    { "id": "st-a-iniciar", "name": "A iniciar", "color": "#94a3b8", "done": false },
+    { "id": "st-em-andamento", "name": "Em andamento", "color": "#0ea5e9", "done": false },
+    { "id": "st-concluido", "name": "Concluído", "color": "#22c55e", "done": true },
+    { "id": "st-cancelado", "name": "Cancelado", "color": "#f43f5e", "done": true },
+    { "id": "st-objetivo", "name": "Objetivo", "color": "#a855f7", "done": false }
+  ],
+  "categories": [
+    { "id": "cat-carreira", "name": "Carreira", "color": "#6366f1" },
+    { "id": "cat-financas", "name": "Finanças", "color": "#10b981" },
+    { "id": "cat-saude", "name": "Saúde", "color": "#ef4444" },
+    { "id": "cat-estudos", "name": "Estudos", "color": "#f59e0b" },
+    { "id": "cat-pessoal", "name": "Pessoal", "color": "#ec4899" },
+    { "id": "cat-viagens", "name": "Viagens", "color": "#14b8a6" }
+  ],
+  "tasks": [
+    {
+      "id": "task-1",
+      "title": "Planejar o ano",
+      "description": "Definir as três apostas principais do ano e o que fica de fora.",
+      "start": "2026-01-05",
+      "end": "2026-01-31",
+      "statusId": "st-concluido",
+      "categoryId": "cat-pessoal",
+      "progress": 100,
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-01-31T00:00:00.000Z"
+    },
+    {
+      "id": "task-2",
+      "title": "Curso de inglês avançado",
+      "description": "Duas aulas por semana + 30 min de leitura por dia.",
+      "start": "2026-02-01",
+      "end": "2026-11-30",
+      "statusId": "st-em-andamento",
+      "categoryId": "cat-estudos",
+      "progress": 45,
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-06-01T00:00:00.000Z"
+    },
+    {
+      "id": "task-3",
+      "title": "Reserva de emergência de 6 meses",
+      "description": "Aporte mensal fixo até fechar o valor-alvo.",
+      "start": "2026-01-01",
+      "end": "2026-12-31",
+      "statusId": "st-objetivo",
+      "categoryId": "cat-financas",
+      "progress": 30,
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-06-01T00:00:00.000Z"
+    },
+    {
+      "id": "task-4",
+      "title": "Preparar mudança de área",
+      "description": "Portfólio, conversas com pessoas da área e candidaturas.",
+      "start": "2026-03-15",
+      "end": "2026-09-30",
+      "statusId": "st-a-iniciar",
+      "categoryId": "cat-carreira",
+      "progress": 0,
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-01-01T00:00:00.000Z"
+    }
+  ],
+  "milestones": [
+    {
+      "id": "ms-1",
+      "title": "Revisão do primeiro semestre",
+      "description": "O que funcionou, o que corto no segundo semestre.",
+      "date": "2026-06-30",
+      "statusId": "st-a-iniciar",
+      "categoryId": "cat-pessoal",
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "ms-2",
+      "title": "Certificação concluída",
+      "description": "",
+      "date": "2026-11-30",
+      "statusId": "st-objetivo",
+      "categoryId": "cat-estudos",
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-01-01T00:00:00.000Z"
+    }
+  ],
+  "dreams": [
+    {
+      "id": "dream-1",
+      "title": "Morar fora por um período",
+      "description": "Um ano em outro país, trabalhando remoto.",
+      "horizon": "longo",
+      "targetYear": 2031,
+      "categoryId": "cat-viagens",
+      "statusId": "st-objetivo",
+      "priority": 5,
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "dream-2",
+      "title": "Aprender a tocar piano",
+      "description": "",
+      "horizon": "algum-dia",
+      "targetYear": null,
+      "categoryId": "cat-pessoal",
+      "statusId": null,
+      "priority": 2,
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "dream-3",
+      "title": "Ter uma renda que não dependa de horas trabalhadas",
+      "description": "Não precisa ser grande — precisa ser recorrente.",
+      "horizon": "medio",
+      "targetYear": 2029,
+      "categoryId": "cat-financas",
+      "statusId": "st-objetivo",
+      "priority": 4,
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-01-01T00:00:00.000Z"
+    }
+  ]
+}
