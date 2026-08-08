@@ -24,13 +24,17 @@ interface Row {
   end: ISODate
   days: number | null
   progress: number | null
+  /** Título da tarefa dona do marco, quando ele mora dentro de uma. */
+  parentTitle: string | null
 }
 
 export function TableView({ tasks, milestones, onOpen }: TableViewProps) {
-  const { statusById, categoryById } = useDatabase()
+  const { db, statusById, categoryById } = useDatabase()
   const [sort, setSort] = useState<{ key: SortKey; dir: 1 | -1 }>({ key: 'start', dir: 1 })
 
   const rows = useMemo<Row[]>(() => {
+    // Busca na base inteira: a tarefa dona pode estar fora do filtro atual.
+    const taskTitleById = new Map(db.tasks.map((task) => [task.id, task.title]))
     const all: Row[] = [
       ...tasks.map((task) => ({
         id: task.id,
@@ -43,6 +47,7 @@ export function TableView({ tasks, milestones, onOpen }: TableViewProps) {
         end: task.end,
         days: durationInDays(task.start, task.end),
         progress: task.progress ?? 0,
+        parentTitle: null,
       })),
       ...milestones.map((milestone) => ({
         id: milestone.id,
@@ -55,6 +60,7 @@ export function TableView({ tasks, milestones, onOpen }: TableViewProps) {
         end: milestone.date,
         days: null,
         progress: null,
+        parentTitle: milestone.taskId ? (taskTitleById.get(milestone.taskId) ?? null) : null,
       })),
     ]
 
@@ -85,16 +91,28 @@ export function TableView({ tasks, milestones, onOpen }: TableViewProps) {
       if (va > vb) return 1 * sort.dir
       return a.title.localeCompare(b.title)
     })
-  }, [tasks, milestones, sort, statusById, categoryById])
+  }, [tasks, milestones, sort, statusById, categoryById, db.tasks])
 
   const toggleSort = (key: SortKey) =>
     setSort((current) => ({ key, dir: current.key === key && current.dir === 1 ? -1 : 1 }))
 
   const exportCsv = () => {
-    const header = ['Tipo', 'Título', 'Descrição', 'Status', 'Categoria', 'Início', 'Fim', 'Dias', 'Progresso']
+    const header = [
+      'Tipo',
+      'Título',
+      'Dentro da tarefa',
+      'Descrição',
+      'Status',
+      'Categoria',
+      'Início',
+      'Fim',
+      'Dias',
+      'Progresso',
+    ]
     const lines = rows.map((row) => [
       row.kind === 'task' ? 'Tarefa' : 'Marco',
       row.title,
+      row.parentTitle ?? '',
       row.description,
       statusById.get(row.statusId)?.name ?? '',
       row.categoryId ? (categoryById.get(row.categoryId)?.name ?? '') : '',
@@ -163,6 +181,11 @@ export function TableView({ tasks, milestones, onOpen }: TableViewProps) {
                 </td>
                 <td className="max-w-xs px-3 py-2">
                   <p className="truncate font-medium">{row.title}</p>
+                  {row.parentTitle ? (
+                    <p className="truncate text-xs text-slate-500 dark:text-slate-400">
+                      ◆ em {row.parentTitle}
+                    </p>
+                  ) : null}
                   {row.description ? (
                     <p className="truncate text-xs text-slate-500 dark:text-slate-400">{row.description}</p>
                   ) : null}

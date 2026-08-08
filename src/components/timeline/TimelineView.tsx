@@ -48,7 +48,7 @@ export function TimelineView({
   focusToken,
   onOpen,
 }: TimelineViewProps) {
-  const { db, statusById, categoryById, saveTask } = useDatabase()
+  const { db, statusById, categoryById, saveTask, shiftTaskMilestones } = useDatabase()
   const scrollRef = useRef<HTMLDivElement>(null)
   const [drag, setDrag] = useState<DragState | null>(null)
   const [hovered, setHovered] = useState<ID | null>(null)
@@ -68,6 +68,28 @@ export function TimelineView({
     })
   }, [tasks, milestones, zoom])
 
+  /**
+   * Marcos vinculados a uma tarefa visível saem da lista de linhas próprias e
+   * viram losangos na linha da tarefa. Se a tarefa estiver escondida por um
+   * filtro, o marco volta a aparecer sozinho em vez de sumir da tela.
+   */
+  const { inlineByTask, looseMilestones } = useMemo(() => {
+    const taskIds = new Set(tasks.map((t) => t.id))
+    const inline = new Map<ID, Milestone[]>()
+    const loose: Milestone[] = []
+    for (const milestone of milestones) {
+      if (milestone.taskId && taskIds.has(milestone.taskId)) {
+        const list = inline.get(milestone.taskId)
+        if (list) list.push(milestone)
+        else inline.set(milestone.taskId, [milestone])
+      } else {
+        loose.push(milestone)
+      }
+    }
+    for (const list of inline.values()) list.sort((a, b) => a.date.localeCompare(b.date))
+    return { inlineByTask: inline, looseMilestones: loose }
+  }, [tasks, milestones])
+
   const groups = useMemo<Group[]>(() => {
     const byStart = (a: { start?: ISODate; date?: ISODate }, b: { start?: ISODate; date?: ISODate }) =>
       (a.start ?? a.date ?? '').localeCompare(b.start ?? b.date ?? '')
@@ -79,7 +101,7 @@ export function TimelineView({
           label: 'Todos os itens',
           color: '#8c8fa1',
           tasks: [...tasks].sort(byStart),
-          milestones: [...milestones].sort((a, b) => a.date.localeCompare(b.date)),
+          milestones: [...looseMilestones].sort((a, b) => a.date.localeCompare(b.date)),
         },
       ]
     }
@@ -103,13 +125,13 @@ export function TimelineView({
     for (const category of db.categories) {
       if (
         tasks.some((t) => t.categoryId === category.id) ||
-        milestones.some((m) => m.categoryId === category.id)
+        looseMilestones.some((m) => m.categoryId === category.id)
       ) {
         ensure(category)
       }
     }
     for (const task of tasks) ensure(task.categoryId ? (categoryById.get(task.categoryId) ?? null) : null).tasks.push(task)
-    for (const milestone of milestones)
+    for (const milestone of looseMilestones)
       ensure(milestone.categoryId ? (categoryById.get(milestone.categoryId) ?? null) : null).milestones.push(
         milestone,
       )
@@ -121,7 +143,7 @@ export function TimelineView({
         tasks: group.tasks.sort(byStart),
         milestones: group.milestones.sort((a, b) => a.date.localeCompare(b.date)),
       }))
-  }, [tasks, milestones, groupByCategory, db.categories, categoryById])
+  }, [tasks, looseMilestones, groupByCategory, db.categories, categoryById])
 
   const scrollToToday = useCallback(() => {
     const container = scrollRef.current
@@ -156,6 +178,9 @@ export function TimelineView({
         } else if (current.deltaDays !== 0) {
           const next = applyDrag(current)
           saveTask({ id: current.id, start: next.start, end: next.end })
+          // Mover a tarefa inteira leva junto os marcos que moram nela;
+          // esticar só uma ponta mexe no prazo, não nos pontos de checagem.
+          if (current.mode === 'move') shiftTaskMilestones(current.id, current.deltaDays)
         }
         return null
       })
@@ -169,7 +194,7 @@ export function TimelineView({
       window.removeEventListener('pointerup', onUp)
       window.removeEventListener('pointercancel', onUp)
     }
-  }, [drag, scale, saveTask, onOpen])
+  }, [drag, scale, saveTask, shiftTaskMilestones, onOpen])
 
   const startDrag = (event: React.PointerEvent, task: Task, mode: DragMode) => {
     if (event.button !== 0) return
@@ -344,6 +369,9 @@ export function TimelineView({
   function renderTaskRow(task: Task, top: number) {
     const isDragging = drag?.id === task.id
     const preview = isDragging && drag ? applyDrag(drag) : { start: task.start, end: task.end }
+    const inline = inlineByTask.get(task.id) ?? []
+    // Arrastar a tarefa inteira arrasta os losangos junto, ainda em pré-visualização.
+    const shift = isDragging && drag?.mode === 'move' ? drag.deltaDays : 0
     const status = statusById.get(task.statusId)
     const category = task.categoryId ? categoryById.get(task.categoryId) : null
     const color = status?.color ?? '#8c8fa1'
@@ -370,6 +398,29 @@ export function TimelineView({
         >
           <span className="size-2 shrink-0 rounded-full" style={{ backgroundColor: color }} />
           <span className="truncate text-sm">{task.title}</span>
+          {inline.length ? (
+            <span
+              className="shrink-0 text-[11px] whitespace-nowrap text-slate-400"
+              title={`${inline.length} ${inline.length === 1 ? 'marco nesta tarefa' : 'marcos nesta tarefa'}`}
+            >
+              ◆ {inline.length}
+            </span>
+          ) : null}
+          <button
+            type="button"
+            className="shrink-0 cursor-pointer rounded px-1 text-xs text-slate-400 opacity-0 transition group-hover:opacity-100 hover:bg-slate-200 hover:text-slate-700 dark:hover:bg-slate-700 dark:hover:text-slate-100"
+            title="Adicionar marco nesta tarefa"
+            aria-label={`Adicionar marco na tarefa ${task.title}`}
+            onClick={(event) => {
+              event.stopPropagation()
+              onOpen({
+                kind: 'milestone',
+                defaults: { date: task.end, taskId: task.id, categoryId: task.categoryId },
+              })
+            }}
+          >
+            +◆
+          </button>
           {category ? (
             <span
               className="ml-auto size-1.5 shrink-0 rounded-full"
@@ -421,6 +472,33 @@ export function TimelineView({
               }}
             />
           </div>
+
+          {inline.map((milestone) => {
+            const milestoneDate = shift ? addISODays(milestone.date, shift) : milestone.date
+            const milestoneColor = statusById.get(milestone.statusId)?.color ?? '#a855f7'
+            const milestoneX = scale.xOf(milestoneDate) + Math.min(scale.pxPerDay, 40) / 2
+            return (
+              <button
+                key={milestone.id}
+                type="button"
+                className="absolute top-1/2 z-20 flex -translate-x-1/2 -translate-y-1/2 cursor-pointer items-center justify-center"
+                style={{ left: milestoneX, width: 18, height: 18 }}
+                // O losango fica por cima da barra: sem isto, clicar nele iniciaria
+                // o arraste da tarefa em vez de abrir o marco.
+                onPointerDown={(event) => event.stopPropagation()}
+                onClick={(event) => {
+                  event.stopPropagation()
+                  onOpen({ kind: 'milestone', id: milestone.id })
+                }}
+                title={`${milestone.title}\n${formatFull(milestoneDate)} · em ${task.title}${milestone.description ? `\n\n${milestone.description}` : ''}`}
+              >
+                <span
+                  className="block size-2.5 rotate-45 rounded-[2px] shadow-sm ring-2 ring-white transition hover:scale-125 dark:ring-slate-900"
+                  style={{ backgroundColor: milestoneColor }}
+                />
+              </button>
+            )
+          })}
 
           {!showLabelInside ? (
             <span

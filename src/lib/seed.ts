@@ -84,6 +84,7 @@ export function createSeedDatabase(): Database {
         date: addISODays(start, 45),
         statusId: 'st-a-iniciar',
         categoryId: 'cat-pessoal',
+        taskId: null,
         ...stamps,
       },
       {
@@ -93,6 +94,18 @@ export function createSeedDatabase(): Database {
         date: toISO(new Date(year, 11, 31)),
         statusId: 'st-objetivo',
         categoryId: null,
+        taskId: null,
+        ...stamps,
+      },
+      {
+        id: 'ms-exemplo-3',
+        title: 'Exemplo: prova intermediária',
+        description:
+          'Marco dentro de uma tarefa: aparece na mesma linha da barra e anda junto quando você arrasta a tarefa.',
+        date: addISODays(start, 60),
+        statusId: 'st-a-iniciar',
+        categoryId: 'cat-estudos',
+        taskId: 'task-exemplo-2',
         ...stamps,
       },
     ],

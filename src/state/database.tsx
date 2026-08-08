@@ -11,6 +11,7 @@ import {
 import type { CategoryDef, Database, Dream, ID, Milestone, StatusDef, Task } from '../types'
 import { bootstrap, clearLocal, normalize, randomId, saveLocal } from '../lib/storage'
 import { createEmptyDatabase, createSeedDatabase } from '../lib/seed'
+import { addISODays } from '../lib/dates'
 
 type Draft<T> = Partial<T> & { id?: ID }
 
@@ -23,6 +24,8 @@ interface DatabaseContextValue {
   deleteTask: (id: ID) => void
   saveMilestone: (draft: Draft<Milestone>) => Milestone
   deleteMilestone: (id: ID) => void
+  /** Desloca em `days` os marcos vinculados a uma tarefa (usado ao arrastá-la). */
+  shiftTaskMilestones: (taskId: ID, days: number) => void
   saveDream: (draft: Draft<Dream>) => Dream
   deleteDream: (id: ID) => void
   saveStatus: (draft: Draft<StatusDef>) => void
@@ -43,11 +46,14 @@ export function DatabaseProvider({ children }: { children: ReactNode }) {
   const [db, setDb] = useState<Database>(() => createEmptyDatabase())
   const [ready, setReady] = useState(false)
   const dirty = useRef(false)
+  /** Espelho do estado atual: permite aplicar a escrita na hora, não no render. */
+  const latest = useRef(db)
 
   useEffect(() => {
     let cancelled = false
     bootstrap().then((loaded) => {
       if (cancelled) return
+      latest.current = loaded
       setDb(loaded)
       setReady(true)
     })
@@ -63,12 +69,18 @@ export function DatabaseProvider({ children }: { children: ReactNode }) {
     saveLocal(db)
   }, [db, ready])
 
+  /**
+   * Aplica a alteração imediatamente sobre `latest`, e não dentro do updater do
+   * `setState`: assim `saveTask`/`saveMilestone` conseguem devolver o item já
+   * gravado — o diálogo precisa do id da tarefa recém-criada para pendurar os
+   * marcos nela — e várias escritas no mesmo evento enxergam umas às outras.
+   */
   const update = useCallback((mutate: (draft: Database) => Database) => {
     dirty.current = true
-    setDb((current) => {
-      const next = mutate(current)
-      return { ...next, meta: { ...next.meta, updatedAt: new Date().toISOString() } }
-    })
+    const mutated = mutate(latest.current)
+    const next = { ...mutated, meta: { ...mutated.meta, updatedAt: new Date().toISOString() } }
+    latest.current = next
+    setDb(next)
   }, [])
 
   const statusById = useMemo(() => new Map(db.statuses.map((s) => [s.id, s])), [db.statuses])
@@ -105,8 +117,14 @@ export function DatabaseProvider({ children }: { children: ReactNode }) {
     [update],
   )
 
+  /** Excluir a tarefa não apaga os marcos dela: eles voltam a ser avulsos. */
   const deleteTask = useCallback<DatabaseContextValue['deleteTask']>(
-    (id) => update((c) => ({ ...c, tasks: c.tasks.filter((t) => t.id !== id) })),
+    (id) =>
+      update((c) => ({
+        ...c,
+        tasks: c.tasks.filter((t) => t.id !== id),
+        milestones: c.milestones.map((m) => (m.taskId === id ? { ...m, taskId: null } : m)),
+      })),
     [update],
   )
 
@@ -124,6 +142,7 @@ export function DatabaseProvider({ children }: { children: ReactNode }) {
           date: draft.date ?? existing?.date ?? '',
           statusId: draft.statusId ?? existing?.statusId ?? current.statuses[0]?.id ?? '',
           categoryId: draft.categoryId !== undefined ? draft.categoryId : (existing?.categoryId ?? null),
+          taskId: draft.taskId !== undefined ? draft.taskId : (existing?.taskId ?? null),
           createdAt: existing?.createdAt ?? now,
           updatedAt: now,
         }
@@ -141,6 +160,20 @@ export function DatabaseProvider({ children }: { children: ReactNode }) {
 
   const deleteMilestone = useCallback<DatabaseContextValue['deleteMilestone']>(
     (id) => update((c) => ({ ...c, milestones: c.milestones.filter((m) => m.id !== id) })),
+    [update],
+  )
+
+  const shiftTaskMilestones = useCallback<DatabaseContextValue['shiftTaskMilestones']>(
+    (taskId, days) => {
+      if (!days) return
+      const now = new Date().toISOString()
+      update((current) => ({
+        ...current,
+        milestones: current.milestones.map((m) =>
+          m.taskId === taskId ? { ...m, date: addISODays(m.date, days), updatedAt: now } : m,
+        ),
+      }))
+    },
     [update],
   )
 
@@ -295,6 +328,7 @@ export function DatabaseProvider({ children }: { children: ReactNode }) {
       deleteTask,
       saveMilestone,
       deleteMilestone,
+      shiftTaskMilestones,
       saveDream,
       deleteDream,
       saveStatus,
@@ -317,6 +351,7 @@ export function DatabaseProvider({ children }: { children: ReactNode }) {
       deleteTask,
       saveMilestone,
       deleteMilestone,
+      shiftTaskMilestones,
       saveDream,
       deleteDream,
       saveStatus,

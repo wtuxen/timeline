@@ -43,6 +43,11 @@ export interface Milestone {
   date: ISODate
   statusId: ID
   categoryId: ID | null
+  /**
+   * Tarefa a que o marco pertence. Preenchido = o marco é desenhado como
+   * losango na mesma linha da barra da tarefa, em vez de ocupar linha própria.
+   */
+  taskId?: ID | null
   createdAt: string
   updatedAt: string
 }

@@ -78,6 +78,7 @@
       "date": "2026-06-30",
       "statusId": "st-a-iniciar",
       "categoryId": "cat-pessoal",
+      "taskId": null,
       "createdAt": "2026-01-01T00:00:00.000Z",
       "updatedAt": "2026-01-01T00:00:00.000Z"
     },
@@ -88,6 +89,18 @@
       "date": "2026-11-30",
       "statusId": "st-objetivo",
       "categoryId": "cat-estudos",
+      "taskId": "task-2",
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "ms-3",
+      "title": "Simulado de meio de curso",
+      "description": "Marco dentro da tarefa: mesma linha da barra na timeline.",
+      "date": "2026-06-15",
+      "statusId": "st-a-iniciar",
+      "categoryId": "cat-estudos",
+      "taskId": "task-2",
       "createdAt": "2026-01-01T00:00:00.000Z",
       "updatedAt": "2026-01-01T00:00:00.000Z"
     }

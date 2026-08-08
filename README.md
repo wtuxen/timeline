@@ -72,6 +72,14 @@ por categoria, linha de "hoje", zoom em cinco níveis (Dia, Semana, Mês, Trimes
 Arraste uma barra para mover a tarefa; arraste as pontas para mudar início ou fim; clique para
 editar.
 
+**Marcos dentro de tarefas** — um marco pode ser um ponto de checagem de uma tarefa, e aí ele
+divide a linha com ela em vez de ocupar uma raia própria. Dá para criá-los de três jeitos:
+na própria tarefa (o editor tem uma seção "Marcos da tarefa", com título, data e status por
+linha), pelo `+◆` que aparece ao passar o mouse na linha da tarefa, ou escolhendo a tarefa no
+campo "Tarefa" ao editar um marco avulso. Um marco vinculado herda a categoria da tarefa,
+anda junto quando você arrasta a barra inteira (esticar só uma ponta não mexe nos marcos) e,
+se a tarefa for excluída, volta a ser um marco avulso em vez de sumir.
+
 **Tabela** — os mesmos itens em lista ordenável por tipo, título, status, categoria, início, fim
 e quantidade de dias, com exportação para CSV.
 
@@ -110,7 +118,8 @@ as escalas de cor do Tailwind apontam para elas, então trocar de flavor (Frapp�
                    "start": "2026-01-05", "end": "2026-01-31",
                    "statusId": "st-x", "categoryId": "cat-x", "progress": 40 }],
   "milestones": [{ "id": "ms-x", "title": "…", "date": "2026-06-30",
-                   "statusId": "st-x", "categoryId": "cat-x" }],
+                   "statusId": "st-x", "categoryId": "cat-x",
+                   "taskId": "task-x" }],
   "dreams":     [{ "id": "dream-x", "title": "…", "horizon": "longo",
                    "targetYear": 2031, "priority": 5,
                    "statusId": "st-x", "categoryId": "cat-x" }]
@@ -118,9 +127,11 @@ as escalas de cor do Tailwind apontam para elas, então trocar de flavor (Frapp�
 ```
 
 Datas são sempre `AAAA-MM-DD` e o intervalo é inclusivo (05/01 a 05/01 = 1 dia). `horizon`
-aceita `curto`, `medio`, `longo` ou `algum-dia`. Na importação, campos ausentes ganham um
-valor padrão e referências quebradas viram "sem categoria" em vez de derrubar a página — dá
-para montar o JSON na mão ou gerar a partir de uma planilha sem medo.
+aceita `curto`, `medio`, `longo` ou `algum-dia`. O `taskId` do marco é opcional: com ele, o
+marco é desenhado na linha daquela tarefa; ausente ou `null`, é um marco avulso com linha
+própria. Na importação, campos ausentes ganham um valor padrão e referências quebradas viram
+"sem categoria" (ou marco avulso, no caso do `taskId`) em vez de derrubar a página — dá para
+montar o JSON na mão ou gerar a partir de uma planilha sem medo.
 
 ---
 

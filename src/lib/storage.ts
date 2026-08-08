@@ -125,6 +125,9 @@ export function normalize(input: unknown): Database {
     }
   })
 
+  // Vínculo com tarefa: referência quebrada vira marco avulso, sem derrubar nada.
+  const taskIds = new Set(tasks.map((t) => t.id))
+
   const milestones: Milestone[] = asArray<Milestone>(raw.milestones).map((m, index) => ({
     id: str(m.id) || `ms-${index}-${randomId()}`,
     title: str(m.title) || 'Sem título',
@@ -132,6 +135,7 @@ export function normalize(input: unknown): Database {
     date: date(m.date) ?? today(),
     statusId: statusIds.has(str(m.statusId)) ? str(m.statusId) : fallbackStatus,
     categoryId: categoryIds.has(str(m.categoryId)) ? str(m.categoryId) : null,
+    taskId: taskIds.has(str(m.taskId)) ? str(m.taskId) : null,
     createdAt: stamp(m.createdAt),
     updatedAt: stamp(m.updatedAt),
   }))
